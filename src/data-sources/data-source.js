@@ -1,23 +1,25 @@
 'use strict';
 
-const Db = require('../controllers/database/dynamodb');
 
 class DataSource {
 
-	async getById(key) {
-
-		const db = new Db(this.constructor.table);
-
-		return db.getById(key);
+	constructor(mongoConnectorPromise) {
+		this.mongoConnectorPromise = mongoConnectorPromise;
 	}
 
-	async list() {
+	async getById(id) {
+		const mongoConnector = await this.mongoConnectorPromise;
+		return mongoConnector.get(this.constructor.table, { _id: id });
+	}
 
-		const db = new Db(this.constructor.table);
+	async getUnique(filters) {
+		const mongoConnector = await this.mongoConnectorPromise;
+		return mongoConnector.get(this.constructor.table, filters);
+	}
 
-		const { Items } = await db.list();
-
-		return Items;
+	async list(filters) {
+		const mongoConnector = await this.mongoConnectorPromise;
+		return mongoConnector.list(this.constructor.table, filters);
 	}
 
 }

@@ -10,9 +10,7 @@ module.exports = {
 	},
 
 	globals: {
-		__rootpath: true,
-		coreRequire: true,
-		JANIS_CORE: true
+		__rootpath: true
 	},
 
 	parserOptions: {
@@ -20,8 +18,13 @@ module.exports = {
 		sourceType: 'script'
 	},
 
+	settings: {
+		"import/core-modules": ["aws-sdk"]
+	},
+
 	rules: {
-		'no-console': 0,
+		'operator-linebreak': 0,
+		'no-continue': 0,
 		'no-plusplus': 0,
 		'prefer-spread': 0,
 		'prefer-rest-params': 0,
@@ -36,7 +39,9 @@ module.exports = {
 		curly: ['error', 'multi-or-nest'],
 
 		'no-underscore-dangle': ['warn', {
-			allowAfterThis: true
+			allowAfterThis: true,
+			allowAfterSuper: true,
+			allow: ['_call', '__rootpath', '_where']
 		}],
 
 		'no-tabs': 0,
@@ -98,13 +103,12 @@ module.exports = {
 
 		'no-restricted-syntax': ['error', 'ForInStatement', 'LabeledStatement', 'WithStatement'],
 		'function-paren-newline': 0,
-		'prefer-promise-reject-errors': 1,
 		'no-await-in-loop': 0,
-		'no-continue': 0,
-		'no-ex-assign': 0,
+
 		'object-curly-newline': ['error', {
 			ObjectExpression: { minProperties: 5, multiline: true, consistent: true },
 			ObjectPattern: { minProperties: 5, multiline: true, consistent: true }
-		}]
+		}],
+		'nonblock-statement-body-position': ['error', 'below', { overrides: { else: 'any' } }]
 	}
 };

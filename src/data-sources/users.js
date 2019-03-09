@@ -8,6 +8,10 @@ class UserDataSource extends DataSource {
 		return 'users';
 	}
 
+	async getByEmail(email) {
+		return this.getUnique({ email });
+	}
+
 }
 
 module.exports = UserDataSource;

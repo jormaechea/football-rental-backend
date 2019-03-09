@@ -7,37 +7,118 @@ provider:
   stage: dev
   region: us-east-1
 
+  environment:
+    MONGO_SSL: ${self:custom.mongoConfiguration.${self:custom.stage}.useSsl, self:custom.mongoConfiguration.default.useSsl}
+    MONGO_USER: ${self:custom.mongoCredentials.${self:custom.stage}.user, ''}
+    MONGO_PASSWORD: ${self:custom.mongoCredentials.${self:custom.stage}.password, ''}
+    MONGO_URL: ${self:custom.mongoConfiguration.${self:custom.stage}.endpoint, self:custom.mongoConfiguration.default.endpoint}
+    MONGO_DB_NAME: football-rental-${self:custom.stage}
+    MONGO_PORT: ${self:custom.mongoConfiguration.${self:custom.stage}.port, self:custom.mongoConfiguration.default.port}
+
+  tags:
+    Service: Football rental
+    Stack: ${self:custom.stage}
+
+  vpc:
+    subnetIds:
+      - subnet-98dbf1a5
+      - subnet-d9581081
+      - subnet-895867ff
+      - subnet-71db975b
+    securityGroupIds:
+      - sg-4958cb32
+
+package:
+  individually: true
+
 functions:
 
   users:
-    handler: handler.users
+    handler: src/handlers/users/handler.users
     events:
       - http:
           path: users
           method: ANY
 
 custom:
-  tableNames:
-    users: users
+
+  stage: ${opt:stage, self:provider.stage}
+
+  humanReadableStage:
+    dev: Dev
+    beta: Beta
+    qa: QA
+    prod: Prod
+
+  serviceResourcesTags:
+    - Key: Service
+      Value: Football rental
+    - Key: Stack
+      Value: ${self:custom.stage}
+
+  mongoConfiguration:
+    default:
+      useSsl: true
+      endpoint: !GetAtt [dbCluster, Endpoint]
+      port: !GetAtt [dbCluster, Port]
+    dev:
+      useSsl: false
+      endpoint: localhost
+      port: 27017
+
+  # mongoCredentials: ${ssm:/aws/reference/secretsmanager/janisAlarm/mongodb/credentials~true}
+  mongoCredentials:
+    dev:
+      user: ''
+      password: ''
 
 plugins:
   - serverless-offline
+  - serverless-plugin-reducer
 
 resources:
 
   Resources:
 
-    UsersTable:
-      Type: 'AWS::DynamoDB::Table'
+    badRequestBodyResponse:
+      Type: AWS::ApiGateway::GatewayResponse
       Properties:
-        AttributeDefinitions:
-          - AttributeName: email
-            AttributeType: S
-        KeySchema:
-          - AttributeName: email
-            KeyType: HASH
-        BillingMode: PAY_PER_REQUEST
-        TableName: ${self:custom.tableNames.users}
-        Tags:
-          - Key: Service
-            Value: ${self:service}
+        ResponseTemplates:
+          'application/json': '{"message":$context.error.messageString,"validationError":"$context.error.validationErrorString"}'
+        ResponseType: BAD_REQUEST_BODY
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        StatusCode: '400'
+
+    dbSubnetGroup:
+      Type: "AWS::DocDB::DBSubnetGroup"
+      Properties:
+        DBSubnetGroupDescription: Football Rental ${self:custom.humanReadableStage.${self:custom.stage}}
+        SubnetIds: ${self:provider.vpc.subnetIds}
+        Tags: ${self:custom.serviceResourcesTags}
+
+    dbParameterGroup:
+      Type: "AWS::DocDB::DBClusterParameterGroup"
+      Properties:
+        Description: Football Rental ${self:custom.humanReadableStage.${self:custom.stage}}
+        Family: docdb3.6
+        Parameters: {}
+        Tags: ${self:custom.serviceResourcesTags}
+
+    dbCluster:
+      Type: "AWS::DocDB::DBCluster"
+      Properties:
+        DBClusterParameterGroupName: !Ref dbParameterGroup
+        DBSubnetGroupName: !Ref dbSubnetGroup
+        MasterUsername: ${self:custom.mongoCredentials.${self:custom.stage}.user, ''}
+        MasterUserPassword: ${self:custom.mongoCredentials.${self:custom.stage}.password, ''}
+        Port: 27017
+        Tags: ${self:custom.serviceResourcesTags}
+        # VpcSecurityGroupIds: !Ref SecurityGruop
+
+    dbInstance:
+      Type: "AWS::DocDB::DBInstance"
+      Properties:
+        DBClusterIdentifier: !Ref dbCluster
+        DBInstanceClass: db.r4.large
+        Tags: ${self:custom.serviceResourcesTags}

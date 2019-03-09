@@ -1,11 +1,28 @@
 {
+  "name": "football-rental-server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint ."
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
   "dependencies": {
     "apollo-server-lambda": "^2.4.2",
-    "aws-sdk": "^2.404.0",
-    "dynamodb": "^1.2.0",
-    "express": "^4.16.4",
-    "express-graphql": "^0.7.1",
+    "bufferutil": "^4.0.1",
     "graphql": "^14.1.1",
-    "serverless-offline": "^4.4.2"
+    "mongodb": "^3.1.13",
+    "utf-8-validate": "^5.0.2"
+  },
+  "devDependencies": {
+    "aws-sdk": "^2.404.0",
+    "eslint": "^5.15.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.16.0",
+    "serverless": "^1.38.0",
+    "serverless-offline": "^4.4.2",
+    "serverless-plugin-reducer": "^3.1.1"
   }
 }

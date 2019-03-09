@@ -1,0 +1,33 @@
+version: '3.3'
+
+# networks:
+#   janis-network:
+#     external: true
+
+services:
+  # janis:
+  #   container_name: janis-alarm
+  #   image: fizzmod/janis-alarm:${TAG:-local}
+  #   build: .
+  #   volumes:
+  #     - .:/var/www/janis
+  #     - ~/.aws:/root/.aws
+  #   environment:
+  #     - NODE_ENV=dev
+  #     - MICROSERVICE=alarm
+  #   ports:
+  #     - "3012:3012"
+  #   networks:
+  #     - janis-network
+
+  #   command: "sls offline -P 3012 -o 0.0.0.0 -s dev -p api --printOutput --noAuth"
+
+  mongo:
+    container_name: janis-alarm-mongo
+    image: mongo:3.6
+    volumes:
+      - ~/.mongo/data:/data/db
+    ports:
+      - "27017:27017"
+    # networks:
+      # - janis-network

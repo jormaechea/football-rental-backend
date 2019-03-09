@@ -3,16 +3,16 @@
 const { gql } = require('apollo-server-lambda');
 
 module.exports = gql`
+
 schema {
 	query: Query,
 	mutation: Mutation
 }
 
 type Query {
-	message: String
-	currentUser: User
-	users: [User]
-	user(email: ID!): User
+	current: User
+	list: [User]
+	get(email: ID!): User
 }
 
 scalar Date
