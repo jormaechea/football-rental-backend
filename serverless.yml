@@ -34,7 +34,7 @@ package:
 functions:
 
   users:
-    handler: src/handlers/users/handler.users
+    handler: src/handlers/api/users/list.handler
     events:
       - http:
           path: users
@@ -63,7 +63,7 @@ custom:
       port: !GetAtt [dbCluster, Port]
     dev:
       useSsl: false
-      endpoint: localhost
+      endpoint: mongo
       port: 27017
 
   # mongoCredentials: ${ssm:/aws/reference/secretsmanager/janisAlarm/mongodb/credentials~true}
