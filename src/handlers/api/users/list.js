@@ -19,7 +19,7 @@ const availableFilters = [
 app.get('/api/users', (req, res) => {
 
 	const listApi = new ListApi(req, res);
-	listApi.setFetcher(userFetcher);
+	listApi.setDataSource(userFetcher);
 
 	return listApi.handleRequest(availableFilters)
 		.catch(e => {

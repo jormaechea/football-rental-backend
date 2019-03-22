@@ -15,7 +15,7 @@ const userFetcher = new UserFetcher(mongoConnectorPromise);
 app.get('/api/users/:email', (req, res) => {
 
 	const getApi = new GetApi(req, res);
-	getApi.setFetcher(userFetcher);
+	getApi.setDataSource(userFetcher);
 
 	return getApi.handleRequest()
 		.catch(e => {

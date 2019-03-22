@@ -7,12 +7,14 @@ class Api {
 		this.res = res;
 	}
 
+	setDataSource(dataSource) {
+		this.dataSource = dataSource;
+	}
+
 	sendResponse(response, apiError) {
 
 		if(apiError)
 			return this.sendError(apiError);
-
-		// this.res.status(200);
 
 		if(response)
 			this.res.send(response);

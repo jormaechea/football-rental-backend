@@ -8,23 +8,19 @@ const Sort = require('./sort');
 
 class ListApi extends Api {
 
-	setFetcher(fetcher) {
-		this.fetcher = fetcher;
-	}
-
 	async handleRequest(availableFilters) {
 
-		if(!this.fetcher)
-			return new ApiInternalError('No fetcher defined.');
+		if(!this.dataSource)
+			return new ApiInternalError('No dataSource defined.');
 
-		if(!this.fetcher.list)
-			return new ApiInternalError('Invalid fetcher defined.');
+		if(!this.dataSource.list)
+			return new ApiInternalError('Invalid dataSource defined.');
 
 		const filter = new Filter(this.req, this.res, availableFilters);
 		const paging = new Paging(this.req, this.res);
 		const sort = new Sort(this.req, this.res);
 
-		const results = await this.fetcher.list(filter.get(), paging.get(), sort.get());
+		const results = await this.dataSource.list(filter.get(), paging.get(), sort.get());
 
 		return this.sendResponse(results);
 	}

@@ -6,19 +6,15 @@ const NotFound = require('./errors/not-found');
 
 class GetApi extends Api {
 
-	setFetcher(fetcher) {
-		this.fetcher = fetcher;
-	}
-
 	async handleRequest() {
 
-		if(!this.fetcher)
-			return new ApiInternalError('No fetcher defined.');
+		if(!this.dataSource)
+			return new ApiInternalError('No dataSource defined.');
 
-		if(!this.fetcher.list)
-			return new ApiInternalError('Invalid fetcher defined.');
+		if(!this.dataSource.getById)
+			return new ApiInternalError('Invalid dataSource defined.');
 
-		const result = await this.fetcher.getById(this.req.params[this.fetcher.constructor.idField]);
+		const result = await this.dataSource.getById(this.req.params[this.dataSource.constructor.idField]);
 
 		if(!result)
 			return this.sendResponse(null, new NotFound('Resource not found'));

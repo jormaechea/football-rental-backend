@@ -47,6 +47,13 @@ functions:
           path: users/{email}
           method: GET
 
+  putUser:
+    handler: src/handlers/api/users/put.handler
+    events:
+      - http:
+          path: users/{email}
+          method: PUT
+
 custom:
 
   stage: ${opt:stage, self:provider.stage}
