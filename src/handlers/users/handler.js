@@ -16,7 +16,7 @@ const userDataSource = new UserDataSource(mongoConnectorPromise);
 const resolvers = {
 	Query: {
 		list: () => userDataSource.list(),
-		get: (obj, { email }) => userDataSource.getByEmail(email)
+		get: (obj, { email }) => userDataSource.getById(email)
 	}
 };
 

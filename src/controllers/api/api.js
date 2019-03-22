@@ -28,7 +28,9 @@ class Api {
 		if(apiError.message) {
 			return this.res
 				.status(apiError.statusCode)
-				.send(apiError.message);
+				.send({
+					message: apiError.message
+				});
 		}
 
 		return this.res

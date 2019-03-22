@@ -24,8 +24,6 @@ class ListApi extends Api {
 		const paging = new Paging(this.req, this.res);
 		const sort = new Sort(this.req, this.res);
 
-		console.log(filter.get());
-
 		const results = await this.fetcher.list(filter.get(), paging.get(), sort.get());
 
 		return this.sendResponse(results);

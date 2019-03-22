@@ -4,12 +4,12 @@ const DataSource = require('./data-source');
 
 class UserDataSource extends DataSource {
 
-	static get table() {
-		return 'users';
+	static get idField() {
+		return 'email';
 	}
 
-	async getByEmail(email) {
-		return this.getUnique({ email });
+	static get table() {
+		return 'users';
 	}
 
 }

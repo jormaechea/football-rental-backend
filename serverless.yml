@@ -33,12 +33,19 @@ package:
 
 functions:
 
-  users:
+  listUsers:
     handler: src/handlers/api/users/list.handler
     events:
       - http:
           path: users
-          method: ANY
+          method: GET
+
+  getUser:
+    handler: src/handlers/api/users/get.handler
+    events:
+      - http:
+          path: users/{email}
+          method: GET
 
 custom:
 
