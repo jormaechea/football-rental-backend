@@ -14,7 +14,10 @@ const userFetcher = new UserFetcher(mongoConnectorPromise);
 
 const availableFilters = [
 	'email',
-	'isActive'
+	{
+		name: 'isActive',
+		valueMapper: value => value === 'true' || value === true
+	}
 ];
 
 app.get('/api/users', (req, res) => {

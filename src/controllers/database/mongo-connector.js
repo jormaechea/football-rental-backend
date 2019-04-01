@@ -84,8 +84,15 @@ class MongoConnector {
 
 		await this.connect(dbHandler);
 
+		const options = {};
+
+		if(paging) {
+			options.skip = paging.start;
+			options.limit = paging.end - paging.start;
+		}
+
 		const listResult = dbHandler.collection(collectionName)
-			.find(filters);
+			.find(filters, options);
 
 		if(sort) {
 			listResult.sort({
@@ -93,7 +100,10 @@ class MongoConnector {
 			});
 		}
 
-		return listResult.toArray();
+		return {
+			items: await listResult.toArray(),
+			totalItems: await listResult.count(false)
+		};
 	}
 
 	async get(collectionName, filters) {

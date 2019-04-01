@@ -25,11 +25,11 @@ class Paging {
 	}
 
 	get start() {
-		return this.req.query[START_PARAMETER] || DEFAULT_START;
+		return Number(this.req.query[START_PARAMETER]) || DEFAULT_START;
 	}
 
 	get end() {
-		return this.req.query[END_PARAMETER] || DEFAULT_END;
+		return Number(this.req.query[END_PARAMETER]) || DEFAULT_END;
 	}
 
 	setResponseHeaders(resultsCount) {

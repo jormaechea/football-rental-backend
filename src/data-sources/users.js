@@ -17,9 +17,12 @@ class UserDataSource extends DataSource {
 	}
 
 	async list(...args) {
-		const users = await super.list(...args);
 
-		return users.map(user => this.formatUser(user));
+		const listResult = await super.list(...args);
+
+		listResult.items = listResult.items.map(user => this.formatUser(user));
+
+		return listResult;
 	}
 
 	async getById(id) {

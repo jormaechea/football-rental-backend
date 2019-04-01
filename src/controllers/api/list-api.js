@@ -22,9 +22,9 @@ class ListApi extends Api {
 
 		const results = await this.dataSource.list(filter.get(), paging.get(), sort.get());
 
-		paging.setResponseHeaders(results.length);
+		paging.setResponseHeaders(results.totalItems);
 
-		return this.sendResponse(results);
+		return this.sendResponse(results.items);
 	}
 
 }
