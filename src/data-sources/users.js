@@ -8,27 +8,25 @@ class UserDataSource extends DataSource {
 		return 'users';
 	}
 
+	formatUser(user) {
+		return user && {
+			id: user._id, // eslint-disable-line no-underscore-dangle
+			...user,
+			_id: undefined
+		};
+	}
+
 	async list(...args) {
 		const users = await super.list(...args);
 
-		return users.map(user => {
-			return {
-				id: user._id, // eslint-disable-line no-underscore-dangle
-				...user,
-				_id: undefined
-			};
-		});
+		return users.map(user => this.formatUser(user));
 	}
 
 	async getById(id) {
 
 		const user = await super.getById(id);
 
-		return user && {
-			id: user._id, // eslint-disable-line no-underscore-dangle
-			...user,
-			_id: undefined
-		};
+		return this.formatUser(user);
 	}
 
 }
