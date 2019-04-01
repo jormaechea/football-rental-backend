@@ -19,8 +19,7 @@ class PutApi extends Api {
 			return requestData;
 
 		return {
-			...requestData,
-			[this.dataSource.constructor.idField]: id
+			...requestData
 		};
 	}
 
@@ -32,9 +31,9 @@ class PutApi extends Api {
 		if(!this.dataSource.insertUpdate)
 			return new ApiInternalError('Invalid dataSource defined.');
 
-		const insertUpdateData = this.executeMapper(this.req.params[this.dataSource.constructor.idField], this.req.body);
+		const insertUpdateData = this.executeMapper(this.req.params.id, this.req.body);
 
-		const documentId = await this.dataSource.insertUpdate(insertUpdateData);
+		const documentId = await this.dataSource.updateById(this.req.params.id, insertUpdateData);
 
 		if(!documentId)
 			return this.sendResponse(null, new ApiInternalError('Internal error while saving resource'));

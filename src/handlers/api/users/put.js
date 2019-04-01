@@ -12,27 +12,21 @@ const UserDataSource = require('../../../data-sources/users');
 
 const userDataSource = new UserDataSource(mongoConnectorPromise);
 
-const putUserMapper = (email, requestData) => ({
-	email,
-	firstName: requestData.firstName,
-	lastName: requestData.lastName,
-	isActive: requestData.isActive
+const putUserMapper = (id, requestData) => ({
+	email: requestData.email.trim(),
+	firstName: requestData.firstName.trim(),
+	lastName: requestData.lastName.trim(),
+	isActive: !!requestData.isActive
 });
 
-app.put('/api/users/:email', (req, res) => {
+app.put('/api/users/:id', (req, res) => {
 
 	const putApi = new PutApi(req, res);
 	putApi.setDataSource(userDataSource);
 
 	putApi.setMapper(putUserMapper);
 
-	return putApi.handleRequest()
-		.catch(e => {
-
-			console.log(e);
-
-			return e;
-		});
+	return putApi.handleRequest();
 });
 
 

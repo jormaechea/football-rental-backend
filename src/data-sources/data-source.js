@@ -3,10 +3,6 @@
 
 class DataSource {
 
-	static get idField() {
-		return '_id';
-	}
-
 	static get table() {
 		throw new Error('Invalid data source');
 	}
@@ -17,7 +13,7 @@ class DataSource {
 
 	async getById(id) {
 		const mongoConnector = await this.mongoConnectorPromise;
-		return mongoConnector.get(this.constructor.table, { [this.constructor.idField]: id });
+		return mongoConnector.get(this.constructor.table, { _id: id });
 	}
 
 	async getUnique(filters) {
@@ -30,10 +26,17 @@ class DataSource {
 		return mongoConnector.list(this.constructor.table, filters, paging, sort);
 	}
 
-	async insertUpdate(document) {
+	async updateById(id, document) {
 
-		const filter = document[this.constructor.idField] ? { [this.constructor.idField]: document[this.constructor.idField] } : {};
+		const filter = {
+			_id: id
+		};
 
+		const mongoConnector = await this.mongoConnectorPromise;
+		return mongoConnector.insertUpdate(this.constructor.table, filter, document);
+	}
+
+	async insertUpdate(document, filter) {
 		const mongoConnector = await this.mongoConnectorPromise;
 		return mongoConnector.insertUpdate(this.constructor.table, filter, document);
 	}

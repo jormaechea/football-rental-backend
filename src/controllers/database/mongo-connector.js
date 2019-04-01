@@ -51,14 +51,33 @@ class MongoConnector {
 
 		await this.connect(dbHandler);
 
-		// Enable insert-update
-		options.upsert = true;
+		if(filter) {
+
+			// Enable insert-update
+			options.upsert = true;
+
+			if(filter._id) // eslint-disable-line no-underscore-dangle
+				filter._id = new ObjectId(filter._id); // eslint-disable-line no-underscore-dangle
+
+			return dbHandler.collection(collectionName)
+				.updateOne(filter, {
+					$set: document
+				}, options)
+				.then(res => {
+
+					if(!res.result || !res.result.ok)
+						return null;
+
+					if(filter._id) // eslint-disable-line no-underscore-dangle
+						return filter._id.toString(); // eslint-disable-line no-underscore-dangle
+
+					return res.upsertedId && res.upsertedId._id ? res.upsertedId._id : null; // eslint-disable-line no-underscore-dangle
+				});
+		}
 
 		return dbHandler.collection(collectionName)
-			.updateOne(filter, {
-				$set: document
-			}, options)
-			.then(res => (res.upsertedId && res.upsertedId._id ? res.upsertedId._id : null)); // eslint-disable-line no-underscore-dangle
+			.insertOne(document, options)
+			.then(res => (res.insertedId || null)); // eslint-disable-line no-underscore-dangle
 	}
 
 	async list(collectionName, filters, paging, sort) {

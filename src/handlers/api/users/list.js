@@ -13,7 +13,8 @@ const UserFetcher = require('../../../data-sources/users');
 const userFetcher = new UserFetcher(mongoConnectorPromise);
 
 const availableFilters = [
-	'email'
+	'email',
+	'isActive'
 ];
 
 app.get('/api/users', (req, res) => {
