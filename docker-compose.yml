@@ -10,17 +10,17 @@ services:
     image: fizzmod/football-rental:${TAG:-local}
     build: .
     volumes:
-      - .:/var/www/janis
+      - .:/var/www/football-rental-server
       - ~/.aws:/root/.aws
     environment:
       - NODE_ENV=dev
       - MICROSERVICE=alarm
     ports:
-      - "3000:3000"
+      - "4000:4000"
     networks:
       - football-rental-network
 
-    command: "sls offline -P 3000 -o 0.0.0.0 -p api --printOutput --noAuth --useSeparateProcesses"
+    command: "sls offline"
 
   mongo:
     container_name: football-rental-mongo

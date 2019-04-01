@@ -1,7 +1,7 @@
 'use strict';
 
 const fs = require('fs');
-const { MongoClient } = require('mongodb');
+const { ObjectId, MongoClient } = require('mongodb');
 
 const caBundle = fs.readFileSync(`${__dirname}/../../../ssl/rds-combined-ca-bundle.pem`, 'utf-8');
 
@@ -58,21 +58,31 @@ class MongoConnector {
 			.updateOne(filter, {
 				$set: document
 			}, options)
-			.then(res => !!res.result.ok);
+			.then(res => (res.upsertedId && res.upsertedId._id ? res.upsertedId._id : null)); // eslint-disable-line no-underscore-dangle
 	}
 
-	async list(collectionName, filters) {
+	async list(collectionName, filters, paging, sort) {
 
 		await this.connect(dbHandler);
 
-		return dbHandler.collection(collectionName)
-			.find(filters)
-			.toArray();
+		const listResult = dbHandler.collection(collectionName)
+			.find(filters);
+
+		if(sort) {
+			listResult.sort({
+				[sort.field]: sort.direction === 'asc' ? 1 : -1
+			});
+		}
+
+		return listResult.toArray();
 	}
 
 	async get(collectionName, filters) {
 
 		await this.connect(dbHandler);
+
+		if(filters._id) // eslint-disable-line no-underscore-dangle
+			filters._id = new ObjectId(filters._id); // eslint-disable-line no-underscore-dangle
 
 		return dbHandler.collection(collectionName)
 			.findOne(filters);

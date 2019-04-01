@@ -3,7 +3,7 @@
 const Api = require('./api');
 const ApiInternalError = require('./errors/internal-error');
 
-class PutApi extends Api {
+class PostApi extends Api {
 
 	executeMapper(id, requestData) {
 		return this.mapper ? this.mapper(id, requestData) : this.defaultMapper(id, requestData);
@@ -14,14 +14,7 @@ class PutApi extends Api {
 	}
 
 	defaultMapper(id, requestData) {
-
-		if(!this.dataSource)
-			return requestData;
-
-		return {
-			...requestData,
-			[this.dataSource.constructor.idField]: id
-		};
+		return requestData;
 	}
 
 	async handleRequest() {
@@ -32,9 +25,9 @@ class PutApi extends Api {
 		if(!this.dataSource.insertUpdate)
 			return new ApiInternalError('Invalid dataSource defined.');
 
-		const insertUpdateData = this.executeMapper(this.req.params[this.dataSource.constructor.idField], this.req.body);
+		const insertData = this.executeMapper(this.req.body);
 
-		const documentId = await this.dataSource.insertUpdate(insertUpdateData);
+		const documentId = await this.dataSource.insertUpdate(insertData);
 
 		if(!documentId)
 			return this.sendResponse(null, new ApiInternalError('Internal error while saving resource'));
@@ -44,4 +37,4 @@ class PutApi extends Api {
 
 }
 
-module.exports = PutApi;
+module.exports = PostApi;

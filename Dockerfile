@@ -4,6 +4,6 @@ RUN apk update
 
 RUN npm install -g serverless
 
-WORKDIR /var/www/janis
+WORKDIR /var/www/football-rental-server
 
 CMD node

@@ -12,18 +12,12 @@ const UserFetcher = require('../../../data-sources/users');
 
 const userFetcher = new UserFetcher(mongoConnectorPromise);
 
-app.get('/api/users/:email', (req, res) => {
+app.get('/api/users/:id', (req, res) => {
 
 	const getApi = new GetApi(req, res);
 	getApi.setDataSource(userFetcher);
 
-	return getApi.handleRequest()
-		.catch(e => {
-
-			console.log(e);
-
-			return e;
-		});
+	return getApi.handleRequest();
 });
 
 

@@ -14,7 +14,7 @@ class GetApi extends Api {
 		if(!this.dataSource.getById)
 			return new ApiInternalError('Invalid dataSource defined.');
 
-		const result = await this.dataSource.getById(this.req.params[this.dataSource.constructor.idField]);
+		const result = await this.dataSource.getById(this.req.params.id);
 
 		if(!result)
 			return this.sendResponse(null, new NotFound('Resource not found'));

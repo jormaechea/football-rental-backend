@@ -16,11 +16,13 @@ class ListApi extends Api {
 		if(!this.dataSource.list)
 			return new ApiInternalError('Invalid dataSource defined.');
 
-		const filter = new Filter(this.req, this.res, availableFilters);
+		const filter = new Filter(this.req, availableFilters);
 		const paging = new Paging(this.req, this.res);
-		const sort = new Sort(this.req, this.res);
+		const sort = new Sort(this.req);
 
 		const results = await this.dataSource.list(filter.get(), paging.get(), sort.get());
+
+		paging.setResponseHeaders(results.length);
 
 		return this.sendResponse(results);
 	}

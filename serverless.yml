@@ -33,6 +33,13 @@ package:
 
 functions:
 
+  getUser:
+    handler: src/handlers/api/users/get.handler
+    events:
+      - http:
+          path: users/{id}
+          method: GET
+
   listUsers:
     handler: src/handlers/api/users/list.handler
     events:
@@ -40,23 +47,32 @@ functions:
           path: users
           method: GET
 
-  getUser:
-    handler: src/handlers/api/users/get.handler
-    events:
-      - http:
-          path: users/{email}
-          method: GET
-
   putUser:
     handler: src/handlers/api/users/put.handler
     events:
       - http:
-          path: users/{email}
+          path: users/{id}
           method: PUT
+  postUser:
+    handler: src/handlers/api/users/post.handler
+    events:
+      - http:
+          path: users
+          method: POST
 
 custom:
 
   stage: ${opt:stage, self:provider.stage}
+
+  serverless-offline:
+    host: 0.0.0.0
+    port: 4000
+    prefix: api
+    # printOutput: true
+    noAuth: true
+    useSeparateProcesses: true
+    corsAllowHeaders: accept,content-type,x-api-key,x-total-count
+    corsExposedHeaders: X-Total-Count
 
   humanReadableStage:
     dev: Dev
@@ -80,7 +96,7 @@ custom:
       endpoint: mongo
       port: 27017
 
-  # mongoCredentials: ${ssm:/aws/reference/secretsmanager/janisAlarm/mongodb/credentials~true}
+  # mongoCredentials: ${ssm:/aws/reference/secretsmanager/footballRental/mongodb/credentials~true}
   mongoCredentials:
     dev:
       user: ''

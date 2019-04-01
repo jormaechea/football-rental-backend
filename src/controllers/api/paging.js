@@ -1,14 +1,14 @@
 'use strict';
 
-const PAGE_PARAMETER = 'page';
+const START_PARAMETER = '_start';
 
-const PAGE_SIZE_PARAMETER = 'per_page';
+const END_PARAMETER = '_end';
 
-const DEFAULT_PAGE = 1;
+const DEFAULT_START = 0;
 
-const DEFAULT_PAGE_SIZE = 20;
+const DEFAULT_END = 20;
 
-const RESPONSE_PAGING_HEADER = 'resources';
+const RESPONSE_PAGING_HEADER = 'x-total-count';
 
 class Paging {
 
@@ -19,25 +19,24 @@ class Paging {
 
 	get() {
 		return {
-			page: this.page,
-			pageSize: this.pageSize
+			start: this.start,
+			end: this.end
 		};
 	}
 
-	get page() {
-		return this.req.query[PAGE_PARAMETER] || DEFAULT_PAGE;
+	get start() {
+		return this.req.query[START_PARAMETER] || DEFAULT_START;
 	}
 
-	get pageSize() {
-		return this.req.query[PAGE_SIZE_PARAMETER] || DEFAULT_PAGE_SIZE;
+	get end() {
+		return this.req.query[END_PARAMETER] || DEFAULT_END;
 	}
 
 	setResponseHeaders(resultsCount) {
-
-		const offset = (this.page - 1) * this.pageSize;
-		const pageEnd = offset + this.pageSize;
-
-		this.res.header(RESPONSE_PAGING_HEADER, `${offset}-${pageEnd}/${resultsCount}`);
+		this.res.header({
+			[RESPONSE_PAGING_HEADER]: resultsCount,
+			'Access-Control-Expose-Headers': RESPONSE_PAGING_HEADER
+		});
 	}
 
 }

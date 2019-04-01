@@ -25,9 +25,9 @@ class DataSource {
 		return mongoConnector.get(this.constructor.table, filters);
 	}
 
-	async list(filters) {
+	async list(filters, paging, sort) {
 		const mongoConnector = await this.mongoConnectorPromise;
-		return mongoConnector.list(this.constructor.table, filters);
+		return mongoConnector.list(this.constructor.table, filters, paging, sort);
 	}
 
 	async insertUpdate(document) {

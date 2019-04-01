@@ -2,9 +2,8 @@
 
 class Filter {
 
-	constructor(req, res, availableFilters = []) {
+	constructor(req, availableFilters = []) {
 		this.req = req;
-		this.res = res;
 		this.availableFilters = availableFilters.map(filter => {
 			return typeof filter === 'object' ? filter : { name: filter };
 		});
