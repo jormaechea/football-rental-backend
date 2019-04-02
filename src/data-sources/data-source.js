@@ -13,7 +13,9 @@ class DataSource {
 
 	async getById(id) {
 		const mongoConnector = await this.mongoConnectorPromise;
-		return mongoConnector.get(this.constructor.table, { _id: id });
+		const item = await mongoConnector.get(this.constructor.table, { _id: id });
+
+		return this.format(item);
 	}
 
 	async getUnique(filters) {
@@ -23,7 +25,20 @@ class DataSource {
 
 	async list(filters, paging, sort) {
 		const mongoConnector = await this.mongoConnectorPromise;
-		return mongoConnector.list(this.constructor.table, filters, paging, sort);
+		const listResult = await mongoConnector.list(this.constructor.table, filters, paging, sort);
+
+		listResult.items = listResult.items.map(this.format);
+
+		return listResult;
+	}
+
+	format(item) {
+		return item && {
+			id: item._id, // eslint-disable-line no-underscore-dangle
+			...item,
+			_id: undefined
+		};
+
 	}
 
 	async updateById(id, document) {

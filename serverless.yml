@@ -53,11 +53,40 @@ functions:
       - http:
           path: users/{id}
           method: PUT
+
   postUser:
     handler: src/handlers/api/users/post.handler
     events:
       - http:
           path: users
+          method: POST
+
+  getField:
+    handler: src/handlers/api/fields/get.handler
+    events:
+      - http:
+          path: fields/{id}
+          method: GET
+
+  listFields:
+    handler: src/handlers/api/fields/list.handler
+    events:
+      - http:
+          path: fields
+          method: GET
+
+  putField:
+    handler: src/handlers/api/fields/put.handler
+    events:
+      - http:
+          path: fields/{id}
+          method: PUT
+
+  postField:
+    handler: src/handlers/api/fields/post.handler
+    events:
+      - http:
+          path: fields
           method: POST
 
 custom:
