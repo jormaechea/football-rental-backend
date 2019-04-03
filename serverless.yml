@@ -89,6 +89,34 @@ functions:
           path: fields
           method: POST
 
+  getPrice:
+    handler: src/handlers/api/prices/get.handler
+    events:
+      - http:
+          path: prices/{id}
+          method: GET
+
+  listPrices:
+    handler: src/handlers/api/prices/list.handler
+    events:
+      - http:
+          path: prices
+          method: GET
+
+  putPrice:
+    handler: src/handlers/api/prices/put.handler
+    events:
+      - http:
+          path: prices/{id}
+          method: PUT
+
+  postPrice:
+    handler: src/handlers/api/prices/post.handler
+    events:
+      - http:
+          path: prices
+          method: POST
+
 custom:
 
   stage: ${opt:stage, self:provider.stage}
