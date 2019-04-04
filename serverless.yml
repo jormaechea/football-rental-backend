@@ -145,6 +145,34 @@ functions:
           path: schedules
           method: POST
 
+  getCustomer:
+    handler: src/handlers/api/customers/get.handler
+    events:
+      - http:
+          path: customers/{id}
+          method: GET
+
+  listCustomers:
+    handler: src/handlers/api/customers/list.handler
+    events:
+      - http:
+          path: customers
+          method: GET
+
+  putCustomer:
+    handler: src/handlers/api/customers/put.handler
+    events:
+      - http:
+          path: customers/{id}
+          method: PUT
+
+  postCustomer:
+    handler: src/handlers/api/customers/post.handler
+    events:
+      - http:
+          path: customers
+          method: POST
+
 custom:
 
   stage: ${opt:stage, self:provider.stage}
