@@ -80,7 +80,7 @@ class MongoConnector {
 			.then(res => (res.insertedId || null)); // eslint-disable-line no-underscore-dangle
 	}
 
-	async list(collectionName, filters, paging, sort) {
+	async list(collectionName, filters, paging, sort, textSearch) {
 
 		await this.connect(dbHandler);
 
@@ -91,13 +91,43 @@ class MongoConnector {
 			options.limit = paging.end - paging.start;
 		}
 
+		for(const [filterName, filterValue] of Object.entries(filters)) {
+			if(filterName === '_id') {
+				if(Array.isArray(filterValue))
+					filters[filterName] = filterValue.map(value => new ObjectId(value));
+				else
+					filters[filterName] = new ObjectId(filterValue);
+			}
+		}
+
+		if(textSearch) {
+			textSearch = {
+				$text: {
+					$search: textSearch,
+					$caseSensitive: false,
+					$diacriticSensitive: false
+				}
+			};
+		}
+
+		const findParams = {
+			...(filters || {}),
+			...(textSearch || {})
+		};
+
 		const listResult = dbHandler.collection(collectionName)
-			.find(filters, options);
+			.find(findParams, options);
 
 		if(sort) {
 			listResult.sort({
 				[sort.field]: sort.direction === 'asc' ? 1 : -1
 			});
+		}
+
+		if(textSearch) {
+			listResult
+				.project({ score: { $meta: 'textScore' } })
+				.sort({ score: { $meta: 'textScore' } });
 		}
 
 		return {

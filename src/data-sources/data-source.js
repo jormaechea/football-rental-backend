@@ -23,9 +23,9 @@ class DataSource {
 		return mongoConnector.get(this.constructor.table, filters);
 	}
 
-	async list(filters, paging, sort) {
+	async list(filters, paging, sort, textSearch) {
 		const mongoConnector = await this.mongoConnectorPromise;
-		const listResult = await mongoConnector.list(this.constructor.table, filters, paging, sort);
+		const listResult = await mongoConnector.list(this.constructor.table, filters, paging, sort, textSearch);
 
 		listResult.items = listResult.items.map(this.format);
 
@@ -38,7 +38,6 @@ class DataSource {
 			...item,
 			_id: undefined
 		};
-
 	}
 
 	async updateById(id, document) {

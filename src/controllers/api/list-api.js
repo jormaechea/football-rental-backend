@@ -8,7 +8,7 @@ const Sort = require('./sort');
 
 class ListApi extends Api {
 
-	async handleRequest(availableFilters) {
+	async handleRequest(availableFilters, textSearchParam) {
 
 		if(!this.dataSource)
 			return new ApiInternalError('No dataSource defined.');
@@ -20,7 +20,9 @@ class ListApi extends Api {
 		const paging = new Paging(this.req, this.res);
 		const sort = new Sort(this.req);
 
-		const results = await this.dataSource.list(filter.get(), paging.get(), sort.get());
+		const textSearch = (textSearchParam && this.req.query[textSearchParam]) || null;
+
+		const results = await this.dataSource.list(filter.get(), paging.get(), sort.get(), textSearch);
 
 		paging.setResponseHeaders(results.totalItems);
 

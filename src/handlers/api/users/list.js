@@ -13,6 +13,10 @@ const UserFetcher = require('../../../data-sources/users');
 const userFetcher = new UserFetcher(mongoConnectorPromise);
 
 const availableFilters = [
+	{
+		name: 'id_like',
+		internalName: '_id'
+	},
 	'email',
 	{
 		name: 'isActive',
@@ -25,7 +29,7 @@ app.get('/api/users', (req, res) => {
 	const listApi = new ListApi(req, res);
 	listApi.setDataSource(userFetcher);
 
-	return listApi.handleRequest(availableFilters);
+	return listApi.handleRequest(availableFilters, 'q');
 });
 
 

@@ -8,6 +8,16 @@ class UserDataSource extends DataSource {
 		return 'users';
 	}
 
+	format(item) {
+
+		item = super.format(item);
+
+		return item && {
+			...item,
+			fullName: `${item.firstName} ${item.lastName}`.trim()
+		};
+	}
+
 }
 
 module.exports = UserDataSource;
