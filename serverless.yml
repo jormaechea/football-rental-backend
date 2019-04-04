@@ -117,6 +117,34 @@ functions:
           path: prices
           method: POST
 
+  getSchedule:
+    handler: src/handlers/api/schedules/get.handler
+    events:
+      - http:
+          path: schedules/{id}
+          method: GET
+
+  listSchedules:
+    handler: src/handlers/api/schedules/list.handler
+    events:
+      - http:
+          path: schedules
+          method: GET
+
+  putSchedule:
+    handler: src/handlers/api/schedules/put.handler
+    events:
+      - http:
+          path: schedules/{id}
+          method: PUT
+
+  postSchedule:
+    handler: src/handlers/api/schedules/post.handler
+    events:
+      - http:
+          path: schedules
+          method: POST
+
 custom:
 
   stage: ${opt:stage, self:provider.stage}
