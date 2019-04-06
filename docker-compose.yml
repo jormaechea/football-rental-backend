@@ -10,7 +10,7 @@ services:
     image: fizzmod/football-rental:${TAG:-local}
     build: .
     volumes:
-      - .:/var/www/football-rental-server
+      - .:/var/www/football-rental-backend
       - ~/.aws:/root/.aws
     environment:
       - NODE_ENV=dev
