@@ -14,11 +14,11 @@ const customersDataSource = new CustomersDataSource(mongoConnectorPromise);
 
 const postCustomerMapper = requestData => ({
 	ownerId: requestData.ownerId.trim(),
-	documentNumber: requestData.documentNumber.trim(),
-	phone: requestData.phone.trim(),
-	email: requestData.email.trim(),
-	firstName: requestData.firstName.trim(),
-	lastName: requestData.lastName.trim(),
+	documentNumber: requestData.documentNumber ? requestData.documentNumber.trim() : '',
+	phone: requestData.phone ? requestData.phone.trim() : '',
+	email: requestData.email ? requestData.email.trim() : '',
+	firstName: requestData.firstName ? requestData.firstName.trim() : '',
+	lastName: requestData.lastName ? requestData.lastName.trim() : '',
 	isBlacklisted: requestData.isBlacklisted !== undefined ? !!requestData.isBlacklisted : false,
 	isPremium: requestData.isPremium !== undefined ? !!requestData.isPremium : false
 });
