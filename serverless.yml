@@ -173,6 +173,34 @@ functions:
           path: customers
           method: POST
 
+  getReservation:
+    handler: src/handlers/api/reservations/get.handler
+    events:
+      - http:
+          path: reservations/{id}
+          method: GET
+
+  listReservations:
+    handler: src/handlers/api/reservations/list.handler
+    events:
+      - http:
+          path: reservations
+          method: GET
+
+  putReservation:
+    handler: src/handlers/api/reservations/put.handler
+    events:
+      - http:
+          path: reservations/{id}
+          method: PUT
+
+  postReservation:
+    handler: src/handlers/api/reservations/post.handler
+    events:
+      - http:
+          path: reservations
+          method: POST
+
 custom:
 
   stage: ${opt:stage, self:provider.stage}
