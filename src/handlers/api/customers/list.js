@@ -28,7 +28,7 @@ app.get('/api/customers', (req, res) => {
 	const listApi = new ListApi(req, res);
 	listApi.setDataSource(customersFetcher);
 
-	return listApi.handleRequest(availableFilters);
+	return listApi.handleRequest(availableFilters, 'q');
 });
 
 

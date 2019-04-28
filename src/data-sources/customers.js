@@ -8,6 +8,16 @@ class Customers extends DataSource {
 		return 'customers';
 	}
 
+	format(item) {
+
+		item = super.format(item);
+
+		return item && {
+			...item,
+			fullName: `${item.firstName} ${item.lastName}`.trim()
+		};
+	}
+
 }
 
 module.exports = Customers;
